@@ -68,9 +68,14 @@
     </section>
 
     <section class="setting">
-      <label for="excludedDomains">Excluded domains</label>
-      <p class="description">The overlay will not appear on these domains. One per line.</p>
-      <textarea id="excludedDomains" rows="4" placeholder="example.com&#10;another-site.org"></textarea>
+      <label>Excluded domains</label>
+      <p class="description">The overlay will not appear on these domains. Domains added via the slow-load suggestion also appear here.</p>
+      <div class="domain-add-row">
+        <input type="text" id="excludedDomainInput" placeholder="example.com">
+        <button id="addDomain" class="btn-secondary">Add</button>
+      </div>
+      <div id="excludedDomainList" class="domain-list"></div>
+      <p id="noDomains" class="domain-empty">No excluded domains yet.</p>
     </section>
 
     <section class="setting">

@@ -15,6 +15,9 @@
     ]
   };
 
+  // Current in-memory domain list (kept in sync with the UI)
+  var currentDomains = [];
+
   var els = {
     enabled: document.getElementById("enabled"),
     showInIframes: document.getElementById("showInIframes"),
@@ -24,12 +27,58 @@
     slowLoadThresholdMs: document.getElementById("slowLoadThresholdMs"),
     slowLoadThresholdMsVal: document.getElementById("slowLoadThresholdMsValue"),
     bgColor: document.getElementById("bgColor"),
-    excludedDomains: document.getElementById("excludedDomains"),
+    domainInput: document.getElementById("excludedDomainInput"),
+    addDomain: document.getElementById("addDomain"),
+    domainList: document.getElementById("excludedDomainList"),
+    noDomains: document.getElementById("noDomains"),
     tips: document.getElementById("tips"),
     save: document.getElementById("save"),
     reset: document.getElementById("resetDefaults"),
     status: document.getElementById("status")
   };
+
+  // --- Domain list management ---
+
+  function renderDomainList(domains) {
+    currentDomains = domains;
+    els.domainList.innerHTML = "";
+    els.noDomains.style.display = domains.length === 0 ? "block" : "none";
+
+    domains.forEach(function (domain, index) {
+      var item = document.createElement("div");
+      item.className = "domain-item";
+
+      var label = document.createElement("span");
+      label.textContent = domain;
+
+      var removeBtn = document.createElement("button");
+      removeBtn.className = "domain-remove";
+      removeBtn.textContent = "\u00d7";
+      removeBtn.title = "Re-enable " + domain;
+      removeBtn.addEventListener("click", function () {
+        removeDomain(index);
+      });
+
+      item.appendChild(label);
+      item.appendChild(removeBtn);
+      els.domainList.appendChild(item);
+    });
+  }
+
+  function addDomain(domain) {
+    domain = domain.trim().toLowerCase();
+    if (!domain) return;
+    if (currentDomains.indexOf(domain) !== -1) return;
+    currentDomains.push(domain);
+    renderDomainList(currentDomains);
+  }
+
+  function removeDomain(index) {
+    currentDomains.splice(index, 1);
+    renderDomainList(currentDomains);
+  }
+
+  // --- Populate / Gather ---
 
   function populateUI(settings) {
     els.enabled.checked = settings.enabled;
@@ -40,7 +89,7 @@
     els.slowLoadThresholdMs.value = settings.slowLoadThresholdMs;
     els.slowLoadThresholdMsVal.textContent = settings.slowLoadThresholdMs === 0 ? "Off" : settings.slowLoadThresholdMs + " ms";
     els.bgColor.value = settings.bgColor;
-    els.excludedDomains.value = settings.excludedDomains.join("\n");
+    renderDomainList(settings.excludedDomains);
     els.tips.value = settings.tips.join("\n");
   }
 
@@ -52,10 +101,7 @@
       safetyTimeoutMs: parseInt(els.safetyTimeoutMs.value, 10),
       slowLoadThresholdMs: parseInt(els.slowLoadThresholdMs.value, 10),
       bgColor: els.bgColor.value,
-      excludedDomains: els.excludedDomains.value
-        .split("\n")
-        .map(function (s) { return s.trim().toLowerCase(); })
-        .filter(Boolean),
+      excludedDomains: currentDomains.slice(),
       tips: els.tips.value
         .split("\n")
         .map(function (s) { return s.trim(); })
@@ -71,9 +117,35 @@
     }, 2000);
   }
 
-  // Load settings on open
+  // --- Init ---
+
   chrome.storage.sync.get(DEFAULTS, function (items) {
     populateUI(items);
+  });
+
+  // Listen for external storage changes (e.g. domain added via slow-load banner)
+  chrome.storage.onChanged.addListener(function (changes) {
+    if (changes.excludedDomains) {
+      renderDomainList(changes.excludedDomains.newValue || []);
+    }
+  });
+
+  // --- Event listeners ---
+
+  // Add domain button
+  els.addDomain.addEventListener("click", function () {
+    addDomain(els.domainInput.value);
+    els.domainInput.value = "";
+    els.domainInput.focus();
+  });
+
+  // Enter key in domain input
+  els.domainInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addDomain(els.domainInput.value);
+      els.domainInput.value = "";
+    }
   });
 
   // Slider live updates
