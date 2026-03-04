@@ -1,0 +1,37 @@
+#__loading-tips-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2147483647;
+  background: #0d1117;
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  opacity: 1;
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
+}
+
+#__loading-tips-overlay.fade-out {
+  opacity: 0;
+}
+
+#__loading-tips-overlay .brand {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #58a6ff;
+}
+
+#__loading-tips-overlay .tip-text {
+  max-width: 480px;
+  text-align: center;
+  line-height: 1.5;
+  color: #8b949e;
+}
