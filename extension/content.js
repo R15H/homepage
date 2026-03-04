@@ -4,6 +4,7 @@
     showInIframes: false,
     minDisplayMs: 600,
     safetyTimeoutMs: 8000,
+    slowLoadThresholdMs: 5000,
     bgColor: "#0d1117",
     excludedDomains: [],
     tips: [
@@ -31,11 +32,19 @@
   document.documentElement.appendChild(overlay);
   var insertedAt = Date.now();
   var settings = DEFAULTS;
+  var slowLoadTimer = null;
 
   // Safety timeout with default value immediately
   var safetyTimer = setTimeout(function () {
     forceRemove(overlay);
   }, DEFAULTS.safetyTimeoutMs);
+
+  // Slow load suggestion timer with default
+  if (DEFAULTS.slowLoadThresholdMs > 0) {
+    slowLoadTimer = setTimeout(function () {
+      showSlowLoadSuggestion(overlay);
+    }, DEFAULTS.slowLoadThresholdMs);
+  }
 
   // Load real settings and adjust
   chrome.storage.sync.get(DEFAULTS, function (s) {
@@ -44,6 +53,7 @@
     // If disabled or domain excluded, remove immediately (no fade)
     if (!s.enabled || isDomainExcluded(s.excludedDomains)) {
       clearTimeout(safetyTimer);
+      clearTimeout(slowLoadTimer);
       overlay.remove();
       return;
     }
@@ -64,10 +74,20 @@
     safetyTimer = setTimeout(function () {
       forceRemove(overlay);
     }, remaining);
+
+    // Reset slow load timer with user's value
+    clearTimeout(slowLoadTimer);
+    if (s.slowLoadThresholdMs > 0) {
+      var slowRemaining = Math.max(0, s.slowLoadThresholdMs - elapsed);
+      slowLoadTimer = setTimeout(function () {
+        showSlowLoadSuggestion(overlay);
+      }, slowRemaining);
+    }
   });
 
   // Remove on page load
   window.addEventListener("load", function () {
+    clearTimeout(slowLoadTimer);
     var elapsed = Date.now() - insertedAt;
     var remaining = Math.max(0, settings.minDisplayMs - elapsed);
     setTimeout(function () {
@@ -77,12 +97,51 @@
 
   // --- Helpers ---
 
+  function showSlowLoadSuggestion(el) {
+    if (!el.parentNode) return;
+    var host = location.hostname;
+    var banner = document.createElement("div");
+    banner.className = "__lt-slow-banner";
+    banner.innerHTML =
+      '<span>This page is taking a while to load.</span>' +
+      '<button class="__lt-disable-btn">Disable on ' + escapeHtml(host) + '</button>' +
+      '<button class="__lt-dismiss-btn">Dismiss</button>';
+
+    el.appendChild(banner);
+
+    banner.querySelector(".__lt-disable-btn").addEventListener("click", function () {
+      chrome.storage.sync.get(DEFAULTS, function (s) {
+        var list = s.excludedDomains || [];
+        if (list.indexOf(host.toLowerCase()) === -1) {
+          list.push(host.toLowerCase());
+        }
+        chrome.storage.sync.set({ excludedDomains: list }, function () {
+          // Remove overlay immediately after excluding
+          clearTimeout(safetyTimer);
+          el.remove();
+        });
+      });
+    });
+
+    banner.querySelector(".__lt-dismiss-btn").addEventListener("click", function () {
+      banner.remove();
+    });
+  }
+
   function runOverlay(s) {
     var el = createOverlayElement(s);
     document.documentElement.appendChild(el);
     var start = Date.now();
+    var iframeSlowTimer = null;
+
+    if (s.slowLoadThresholdMs > 0) {
+      iframeSlowTimer = setTimeout(function () {
+        showSlowLoadSuggestion(el);
+      }, s.slowLoadThresholdMs);
+    }
 
     window.addEventListener("load", function () {
+      clearTimeout(iframeSlowTimer);
       var elapsed = Date.now() - start;
       var remaining = Math.max(0, s.minDisplayMs - elapsed);
       setTimeout(function () { fadeOut(el); }, remaining);
@@ -113,7 +172,6 @@
     if (!el.parentNode) return;
     el.classList.add("fade-out");
     el.addEventListener("transitionend", function () { el.remove(); });
-    // Fallback if transitionend never fires
     setTimeout(function () { if (el.parentNode) el.remove(); }, 500);
   }
 

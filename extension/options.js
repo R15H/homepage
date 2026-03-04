@@ -4,6 +4,7 @@
     showInIframes: false,
     minDisplayMs: 600,
     safetyTimeoutMs: 8000,
+    slowLoadThresholdMs: 5000,
     bgColor: "#0d1117",
     excludedDomains: [],
     tips: [
@@ -20,6 +21,8 @@
     minDisplayMs: document.getElementById("minDisplayMs"),
     minDisplayMsVal: document.getElementById("minDisplayMsValue"),
     safetyTimeoutMs: document.getElementById("safetyTimeoutMs"),
+    slowLoadThresholdMs: document.getElementById("slowLoadThresholdMs"),
+    slowLoadThresholdMsVal: document.getElementById("slowLoadThresholdMsValue"),
     bgColor: document.getElementById("bgColor"),
     excludedDomains: document.getElementById("excludedDomains"),
     tips: document.getElementById("tips"),
@@ -34,6 +37,8 @@
     els.minDisplayMs.value = settings.minDisplayMs;
     els.minDisplayMsVal.textContent = settings.minDisplayMs + " ms";
     els.safetyTimeoutMs.value = settings.safetyTimeoutMs;
+    els.slowLoadThresholdMs.value = settings.slowLoadThresholdMs;
+    els.slowLoadThresholdMsVal.textContent = settings.slowLoadThresholdMs === 0 ? "Off" : settings.slowLoadThresholdMs + " ms";
     els.bgColor.value = settings.bgColor;
     els.excludedDomains.value = settings.excludedDomains.join("\n");
     els.tips.value = settings.tips.join("\n");
@@ -45,6 +50,7 @@
       showInIframes: els.showInIframes.checked,
       minDisplayMs: parseInt(els.minDisplayMs.value, 10),
       safetyTimeoutMs: parseInt(els.safetyTimeoutMs.value, 10),
+      slowLoadThresholdMs: parseInt(els.slowLoadThresholdMs.value, 10),
       bgColor: els.bgColor.value,
       excludedDomains: els.excludedDomains.value
         .split("\n")
@@ -70,9 +76,14 @@
     populateUI(items);
   });
 
-  // Slider live update
+  // Slider live updates
   els.minDisplayMs.addEventListener("input", function () {
     els.minDisplayMsVal.textContent = this.value + " ms";
+  });
+
+  els.slowLoadThresholdMs.addEventListener("input", function () {
+    var val = parseInt(this.value, 10);
+    els.slowLoadThresholdMsVal.textContent = val === 0 ? "Off" : val + " ms";
   });
 
   // Preset color swatches

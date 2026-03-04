@@ -45,6 +45,15 @@
     </section>
 
     <section class="setting">
+      <label for="slowLoadThresholdMs">Slow load suggestion</label>
+      <p class="description">If a page takes longer than this to load, suggest disabling the extension on that domain. Set to 0 to disable.</p>
+      <div class="input-row">
+        <input type="range" id="slowLoadThresholdMs" min="0" max="15000" step="500" value="5000">
+        <span id="slowLoadThresholdMsValue" class="range-value">5000 ms</span>
+      </div>
+    </section>
+
+    <section class="setting">
       <label for="bgColor">Overlay background color</label>
       <p class="description">The background color of the loading overlay.</p>
       <div class="color-row">

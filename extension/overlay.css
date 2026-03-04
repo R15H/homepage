@@ -35,3 +35,60 @@
   line-height: 1.5;
   color: #8b949e;
 }
+
+/* Slow load suggestion banner */
+
+#__loading-tips-overlay .__lt-slow-banner {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #c9d1d9;
+  pointer-events: auto;
+  animation: __lt-slide-up 0.3s ease-out;
+}
+
+@keyframes __lt-slide-up {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+#__loading-tips-overlay .__lt-disable-btn {
+  background: #da3633;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#__loading-tips-overlay .__lt-disable-btn:hover {
+  background: #f85149;
+}
+
+#__loading-tips-overlay .__lt-dismiss-btn {
+  background: transparent;
+  color: #8b949e;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#__loading-tips-overlay .__lt-dismiss-btn:hover {
+  border-color: #8b949e;
+}
