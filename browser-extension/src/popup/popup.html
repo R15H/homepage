@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="popup.css" />
+  <title>Page Simplifier</title>
+</head>
+<body>
+  <div class="popup">
+    <h1 class="popup-title">Page Simplifier</h1>
+
+    <div class="section">
+      <label class="toggle-row">
+        <span>Auto-hide unused elements</span>
+        <input type="checkbox" id="auto-hide-toggle" checked />
+        <span class="slider"></span>
+      </label>
+      <p class="hint">Hides elements you rarely interact with (needs 3+ days of data)</p>
+    </div>
+
+    <div class="section">
+      <label class="toggle-row">
+        <span>Show floating button</span>
+        <input type="checkbox" id="fab-toggle" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="section">
+      <label class="label">Button position</label>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="position" value="bottom-right" checked />
+          Bottom right
+        </label>
+        <label>
+          <input type="radio" name="position" value="bottom-left" />
+          Bottom left
+        </label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section stats">
+      <div class="stat-row">
+        <span>Sessions tracked</span>
+        <span id="stat-sessions">0</span>
+      </div>
+      <div class="stat-row">
+        <span>Elements tracked</span>
+        <span id="stat-elements">0</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="danger-btn" id="clear-data">Clear all data</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

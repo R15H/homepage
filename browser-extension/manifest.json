@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Page Simplifier",
+  "version": "0.1.0",
+  "description": "Reduces visual noise by learning which UI elements you actually use",
+  "permissions": ["storage", "alarms"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Page Simplifier"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,406 @@
+/* ===== Page Simplifier FAB Widget ===== */
+:host {
+  all: initial;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.ps-fab {
+  position: fixed;
+  z-index: 2147483646;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(90, 90, 90, 0.35);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s, transform 0.2s, background 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  padding: 0;
+}
+
+.ps-fab.bottom-right {
+  bottom: 20px;
+  right: 20px;
+}
+
+.ps-fab.bottom-left {
+  bottom: 20px;
+  left: 20px;
+}
+
+.ps-fab:hover {
+  opacity: 1;
+  background: rgba(90, 90, 90, 0.7);
+  transform: scale(1.1);
+}
+
+.ps-fab.active {
+  background: rgba(220, 50, 50, 0.8);
+}
+
+.ps-fab.pulse {
+  animation: ps-pulse 0.6s ease-in-out 3;
+}
+
+@keyframes ps-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+
+.ps-fab svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}
+
+/* ===== Expanded menu ===== */
+.ps-menu {
+  position: fixed;
+  z-index: 2147483646;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  padding: 8px 0;
+  min-width: 180px;
+  display: none;
+}
+
+.ps-menu.open {
+  display: block;
+}
+
+.ps-menu.bottom-right {
+  bottom: 64px;
+  right: 20px;
+}
+
+.ps-menu.bottom-left {
+  bottom: 64px;
+  left: 20px;
+}
+
+.ps-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  color: #333;
+  transition: background 0.15s;
+}
+
+.ps-menu-item:hover {
+  background: #f0f0f0;
+}
+
+.ps-menu-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.ps-menu-item .label {
+  flex: 1;
+}
+
+.ps-menu-item .toggle {
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  background: #ccc;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.ps-menu-item .toggle.on {
+  background: #4CAF50;
+}
+
+.ps-menu-item .toggle::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s;
+}
+
+.ps-menu-item .toggle.on::after {
+  left: 16px;
+}
+
+.ps-divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 4px 0;
+}
+
+/* ===== Toast ===== */
+.ps-toast {
+  position: fixed;
+  bottom: 72px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 2147483647;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.ps-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.ps-toast-action {
+  color: #64B5F6;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0;
+}
+
+.ps-toast-action:hover {
+  text-decoration: underline;
+}
+
+/* ===== Tooltip ===== */
+.ps-tooltip {
+  position: fixed;
+  z-index: 2147483647;
+  background: #333;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  max-width: 220px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.ps-tooltip.visible {
+  opacity: 1;
+}
+
+.ps-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: 16px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #333;
+}
+
+/* ===== List indicator ===== */
+.ps-list-indicator {
+  position: absolute;
+  z-index: 2147483645;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(100, 100, 240, 0.6);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.ps-list-indicator.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ps-list-indicator:hover {
+  background: rgba(100, 100, 240, 0.85);
+  transform: scale(1.1);
+}
+
+.ps-list-indicator svg {
+  width: 16px;
+  height: 16px;
+  fill: white;
+}
+
+/* ===== Hide mode overlay ===== */
+.ps-hide-overlay {
+  outline: 2px dashed rgba(220, 50, 50, 0.7) !important;
+  outline-offset: 2px !important;
+  cursor: crosshair !important;
+}
+
+/* ===== Group panel ===== */
+.ps-group-panel {
+  position: absolute;
+  z-index: 2147483645;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  padding: 12px 16px;
+  min-width: 260px;
+  display: none;
+}
+
+.ps-group-panel.open {
+  display: block;
+}
+
+.ps-group-input-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.ps-group-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+}
+
+.ps-group-input:focus {
+  border-color: #64B5F6;
+}
+
+.ps-regex-toggle {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: monospace;
+  color: #999;
+}
+
+.ps-regex-toggle.on {
+  background: #e3f2fd;
+  border-color: #64B5F6;
+  color: #1976d2;
+}
+
+.ps-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.ps-autocomplete.open {
+  display: block;
+}
+
+.ps-autocomplete-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.ps-autocomplete-item:hover,
+.ps-autocomplete-item.selected {
+  background: #e3f2fd;
+}
+
+.ps-group-preview {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* ===== Fold (collapsed group) ===== */
+.ps-fold {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin: 4px 0;
+  overflow: hidden;
+}
+
+.ps-fold-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 13px;
+  user-select: none;
+}
+
+.ps-fold-header:hover {
+  background: #ebebeb;
+}
+
+.ps-fold-arrow {
+  transition: transform 0.2s;
+  font-size: 10px;
+}
+
+.ps-fold.open .ps-fold-arrow {
+  transform: rotate(90deg);
+}
+
+.ps-fold-count {
+  color: #999;
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.ps-fold-content {
+  display: none;
+}
+
+.ps-fold.open .ps-fold-content {
+  display: block;
+}
+
+.ps-fold-remove {
+  border: none;
+  background: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+.ps-fold-remove:hover {
+  color: #e53935;
+}
