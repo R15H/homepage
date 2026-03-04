@@ -1,15 +1,17 @@
 {
   "manifest_version": 3,
   "name": "Loading Tips",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Shows helpful tips while pages load.",
+  "permissions": ["storage"],
+  "options_page": "options.html",
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": ["content.js"],
       "css": ["overlay.css"],
       "run_at": "document_start",
-      "all_frames": false
+      "all_frames": true
     }
   ],
   "icons": {

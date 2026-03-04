@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading Tips — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Loading Tips Settings</h1>
+    <p class="subtitle">Configure how the loading overlay behaves.</p>
+
+    <section class="setting">
+      <div class="setting-header">
+        <label for="enabled">Enable extension</label>
+        <input type="checkbox" id="enabled" checked>
+      </div>
+      <p class="description">Master on/off switch. When disabled, no overlay is shown.</p>
+    </section>
+
+    <section class="setting">
+      <div class="setting-header">
+        <label for="showInIframes">Show in iframes</label>
+        <input type="checkbox" id="showInIframes">
+      </div>
+      <p class="description">Also display the overlay inside embedded frames.</p>
+    </section>
+
+    <section class="setting">
+      <label for="minDisplayMs">Minimum display time</label>
+      <p class="description">The overlay stays visible for at least this long to prevent flashing.</p>
+      <div class="input-row">
+        <input type="range" id="minDisplayMs" min="0" max="3000" step="100" value="600">
+        <span id="minDisplayMsValue" class="range-value">600 ms</span>
+      </div>
+    </section>
+
+    <section class="setting">
+      <label for="safetyTimeoutMs">Safety timeout</label>
+      <p class="description">Force-remove the overlay after this many milliseconds, even if the page hasn't finished loading.</p>
+      <div class="input-row">
+        <input type="number" id="safetyTimeoutMs" min="1000" max="30000" step="500" value="8000">
+        <span class="unit">ms</span>
+      </div>
+    </section>
+
+    <section class="setting">
+      <label for="bgColor">Overlay background color</label>
+      <p class="description">The background color of the loading overlay.</p>
+      <div class="color-row">
+        <input type="color" id="bgColor" value="#0d1117">
+        <div class="presets">
+          <button class="preset-swatch" data-color="#0d1117" title="Dark (default)"></button>
+          <button class="preset-swatch" data-color="#1a1a2e" title="Navy"></button>
+          <button class="preset-swatch" data-color="#ffffff" title="Light"></button>
+          <button class="preset-swatch" data-color="#161b22" title="GitHub Dark"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="setting">
+      <label for="excludedDomains">Excluded domains</label>
+      <p class="description">The overlay will not appear on these domains. One per line.</p>
+      <textarea id="excludedDomains" rows="4" placeholder="example.com&#10;another-site.org"></textarea>
+    </section>
+
+    <section class="setting">
+      <label for="tips">Tips</label>
+      <p class="description">The tips shown randomly on the overlay. One per line.</p>
+      <textarea id="tips" rows="6"></textarea>
+    </section>
+
+    <div class="actions">
+      <button id="save" class="btn-primary">Save settings</button>
+      <button id="resetDefaults" class="btn-secondary">Reset to defaults</button>
+      <span id="status" class="status-msg"></span>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
