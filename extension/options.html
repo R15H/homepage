@@ -8,7 +8,29 @@
 <body>
   <div class="container">
     <h1>Loading Tips Settings</h1>
-    <p class="subtitle">Configure how the loading overlay behaves.</p>
+    <p class="subtitle">Configure your loading screen experience.</p>
+
+    <!-- Screens Section -->
+    <h2 class="section-title">Screens</h2>
+
+    <section class="setting">
+      <label>Active screens</label>
+      <p class="description">Enable one or more screens. When multiple are enabled, they rotate on each page load.</p>
+      <div id="screenGallery" class="screen-gallery"></div>
+      <div class="rotation-row">
+        <label for="rotationMode">Rotation mode</label>
+        <select id="rotationMode">
+          <option value="random">Random</option>
+          <option value="sequential">Sequential</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Per-screen config (dynamically rendered) -->
+    <div id="screenConfigContainer"></div>
+
+    <!-- General Settings -->
+    <h2 class="section-title">General</h2>
 
     <section class="setting">
       <div class="setting-header">
@@ -78,12 +100,6 @@
       <p id="noDomains" class="domain-empty">No excluded domains yet.</p>
     </section>
 
-    <section class="setting">
-      <label for="tips">Tips</label>
-      <p class="description">The tips shown randomly on the overlay. One per line.</p>
-      <textarea id="tips" rows="6"></textarea>
-    </section>
-
     <div class="actions">
       <button id="save" class="btn-primary">Save settings</button>
       <button id="resetDefaults" class="btn-secondary">Reset to defaults</button>
@@ -91,6 +107,10 @@
     </div>
   </div>
 
+  <script src="screens/registry.js"></script>
+  <script src="screens/quotes.js"></script>
+  <script src="screens/age-clock.js"></script>
+  <script src="screens/pomodoro.js"></script>
   <script src="options.js"></script>
 </body>
 </html>

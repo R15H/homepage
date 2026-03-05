@@ -29,11 +29,11 @@
   color: #58a6ff;
 }
 
-#__loading-tips-overlay .tip-text {
-  max-width: 480px;
-  text-align: center;
-  line-height: 1.5;
-  color: #8b949e;
+#__loading-tips-overlay .__lt-screen-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Slow load suggestion banner */

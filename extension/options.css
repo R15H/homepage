@@ -29,6 +29,16 @@ h1 {
   margin-bottom: 32px;
 }
 
+.section-title {
+  color: #c9d1d9;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* Setting cards */
 
 .setting {
@@ -254,6 +264,165 @@ input[type="color"] {
   font-size: 13px;
   font-style: italic;
   margin-top: 4px;
+}
+
+/* Screen gallery */
+
+.screen-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.screen-card {
+  background: #0d1117;
+  border: 2px solid #30363d;
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.screen-card:hover {
+  border-color: #484f58;
+}
+
+.screen-card.active {
+  border-color: #58a6ff;
+}
+
+.screen-card .screen-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #c9d1d9;
+  margin-bottom: 4px;
+}
+
+.screen-card .screen-desc {
+  font-size: 12px;
+  color: #8b949e;
+  line-height: 1.4;
+}
+
+.screen-card .screen-check {
+  float: right;
+  color: #58a6ff;
+  font-size: 16px;
+  display: none;
+}
+
+.screen-card.active .screen-check {
+  display: inline;
+}
+
+/* Rotation mode */
+
+.rotation-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.rotation-row label {
+  font-size: 14px;
+}
+
+.rotation-row select {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #c9d1d9;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.rotation-row select:focus {
+  outline: none;
+  border-color: #58a6ff;
+}
+
+/* Per-screen config */
+
+.screen-config-section {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.screen-config-section .config-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: #58a6ff;
+  margin-bottom: 12px;
+}
+
+.config-field {
+  margin-bottom: 12px;
+}
+
+.config-field:last-child {
+  margin-bottom: 0;
+}
+
+.config-field label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: #c9d1d9;
+  margin-bottom: 4px;
+}
+
+.config-field .config-desc {
+  font-size: 12px;
+  color: #8b949e;
+  margin-bottom: 6px;
+}
+
+.config-field input[type="text"],
+.config-field input[type="date"],
+.config-field input[type="number"],
+.config-field textarea {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #c9d1d9;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  width: 100%;
+}
+
+.config-field input[type="date"] {
+  width: auto;
+}
+
+.config-field input:focus,
+.config-field textarea:focus {
+  outline: none;
+  border-color: #58a6ff;
+}
+
+.config-field .config-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Pomodoro controls */
+
+.pomo-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.pomo-controls button {
+  font-family: inherit;
 }
 
 .status-msg {
