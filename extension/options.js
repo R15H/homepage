@@ -4,7 +4,7 @@
   var DEFAULTS = {
     enabled: true,
     showInIframes: false,
-    minDisplayMs: 600,
+    minDisplayMs: 0,
     safetyTimeoutMs: 8000,
     slowLoadThresholdMs: 5000,
     bgColor: "#0d1117",

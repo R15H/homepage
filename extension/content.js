@@ -13,7 +13,7 @@
   var DEFAULTS = {
     enabled: true,
     showInIframes: false,
-    minDisplayMs: 600,
+    minDisplayMs: 0,
     safetyTimeoutMs: 8000,
     slowLoadThresholdMs: 5000,
     bgColor: "#0d1117",
@@ -22,6 +22,10 @@
     rotationMode: "random",
     screenConfig: {}
   };
+
+  // Skip overlay entirely on bfcache restores and prerendered pages
+  // (these are instant — the page is already fully loaded)
+  if (document.readyState === "complete") return;
 
   var isIframe = window !== window.top;
 
@@ -71,40 +75,7 @@
 
   // ══════ PHASE 2: ASYNC — Load settings, re-render, hydrate ══════
 
-  // Fetch sync settings + local state in parallel
-  var syncSettings = null;
-  var localState = null;
-  var pending = 2;
-
   chrome.storage.sync.get(DEFAULTS, function (s) {
-    syncSettings = s;
-    pending--;
-    if (pending === 0) onSettingsReady();
-  });
-
-  // Collect localStorageKeys from all screens
-  var localKeys = {};
-  registry.getAll().forEach(function (scr) {
-    if (scr.localStorageKeys) {
-      scr.localStorageKeys.forEach(function (k) { localKeys[k] = true; });
-    }
-  });
-  var localKeyList = Object.keys(localKeys);
-
-  if (localKeyList.length > 0) {
-    chrome.storage.local.get(localKeyList, function (ls) {
-      localState = ls;
-      pending--;
-      if (pending === 0) onSettingsReady();
-    });
-  } else {
-    localState = {};
-    pending--;
-    if (pending === 0) onSettingsReady();
-  }
-
-  function onSettingsReady() {
-    var s = syncSettings;
     settings = s;
 
     // If disabled or domain excluded, remove immediately
@@ -115,21 +86,43 @@
       return;
     }
 
-    // Pick screen with rotation
-    var counter = (localState && localState.__ltRotationCounter) || 0;
-    var picked = registry.pick(s.enabledScreens, s.rotationMode, counter);
+    // Pick screen with rotation (use 0 for counter; sequential fetches it below)
+    var picked = registry.pick(s.enabledScreens, s.rotationMode, 0);
     if (!picked.screen) {
       clearTimeout(safetyTimer);
       overlay.remove();
       return;
     }
 
-    // Save rotation counter for sequential mode
-    if (s.rotationMode === "sequential" && picked.nextCounter !== counter) {
-      chrome.storage.local.set({ __ltRotationCounter: picked.nextCounter });
-    }
-
     activeScreen = picked.screen;
+
+    // Determine if we need local storage (screen state or sequential rotation)
+    var needsLocal = !!(activeScreen.localStorageKeys && activeScreen.localStorageKeys.length > 0);
+    var needsSequential = s.rotationMode === "sequential" && s.enabledScreens.length > 1;
+
+    if (needsLocal || needsSequential) {
+      var keys = needsSequential ? ["__ltRotationCounter"] : [];
+      if (activeScreen.localStorageKeys) {
+        keys = keys.concat(activeScreen.localStorageKeys);
+      }
+      chrome.storage.local.get(keys, function (ls) {
+        // Re-pick with real counter for sequential mode
+        if (needsSequential) {
+          var counter = ls.__ltRotationCounter || 0;
+          picked = registry.pick(s.enabledScreens, s.rotationMode, counter);
+          activeScreen = picked.screen;
+          if (picked.nextCounter !== counter) {
+            chrome.storage.local.set({ __ltRotationCounter: picked.nextCounter });
+          }
+        }
+        applyScreen(s, ls);
+      });
+    } else {
+      applyScreen(s, {});
+    }
+  });
+
+  function applyScreen(s, localState) {
     var screenId = activeScreen.manifest.id;
     var userConfig = mergeConfig(activeScreen, s.screenConfig[screenId] || {});
     var ctx = registry.buildContext();
