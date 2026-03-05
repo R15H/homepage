@@ -20,7 +20,8 @@
     excludedDomains: [],
     enabledScreens: ["quotes"],
     rotationMode: "random",
-    screenConfig: {}
+    screenConfig: {},
+    showOnNavigate: true
   };
 
   // Skip overlay entirely on bfcache restores and prerendered pages
@@ -160,7 +161,7 @@
     }
   }
 
-  // ══════ PHASE 3: Page load → fade out ══════
+  // ══════ PHASE 3: Page load → fade out → set up navigation overlay ══════
 
   window.addEventListener("load", function () {
     clearTimeout(slowLoadTimer);
@@ -169,8 +170,43 @@
     setTimeout(function () {
       if (typeof hydrateCleanup === "function") hydrateCleanup();
       fadeOut(overlay);
+      setupNavigationOverlay();
     }, remaining);
   }, { once: true });
+
+  // ══════ PHASE 4: Navigation gap — show overlay on beforeunload ══════
+
+  function setupNavigationOverlay() {
+    if (!settings.showOnNavigate) return;
+    if (!activeScreen) return;
+
+    window.addEventListener("beforeunload", function () {
+      // Re-inject overlay on the current page to cover the navigation gap.
+      // DOM changes during beforeunload ARE rendered by the browser — the
+      // old page stays visible until the new page's first paint replaces it.
+      var screenId = activeScreen.manifest.id;
+      var config = mergeConfig(activeScreen, (settings.screenConfig[screenId]) || {});
+      var ctx = registry.buildContext();
+
+      var navOverlay = document.createElement("div");
+      navOverlay.id = "__loading-tips-overlay";
+      navOverlay.style.background = settings.bgColor;
+      injectScreenStyle(activeScreen);
+      navOverlay.innerHTML =
+        '<div class="brand">Loading Tips</div>' +
+        '<div class="__lt-screen-content">' + activeScreen.render(config, ctx, {}) + "</div>";
+
+      document.documentElement.appendChild(navOverlay);
+
+      // Safety: if navigation was cancelled (user clicked "Stay" on dialog),
+      // remove the overlay after 10 seconds
+      setTimeout(function () {
+        if (navOverlay.parentNode) {
+          fadeOut(navOverlay);
+        }
+      }, 10000);
+    });
+  }
 
   // ══════ Helpers ══════
 

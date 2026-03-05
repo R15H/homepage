@@ -11,7 +11,8 @@
     excludedDomains: [],
     enabledScreens: ["quotes"],
     rotationMode: "random",
-    screenConfig: {}
+    screenConfig: {},
+    showOnNavigate: true
   };
 
   var currentDomains = [];
@@ -21,6 +22,7 @@
   var els = {
     enabled: document.getElementById("enabled"),
     showInIframes: document.getElementById("showInIframes"),
+    showOnNavigate: document.getElementById("showOnNavigate"),
     minDisplayMs: document.getElementById("minDisplayMs"),
     minDisplayMsVal: document.getElementById("minDisplayMsValue"),
     safetyTimeoutMs: document.getElementById("safetyTimeoutMs"),
@@ -256,6 +258,7 @@
   function populateUI(settings) {
     els.enabled.checked = settings.enabled;
     els.showInIframes.checked = settings.showInIframes;
+    els.showOnNavigate.checked = settings.showOnNavigate !== false;
     els.minDisplayMs.value = settings.minDisplayMs;
     els.minDisplayMsVal.textContent = settings.minDisplayMs + " ms";
     els.safetyTimeoutMs.value = settings.safetyTimeoutMs;
@@ -289,6 +292,7 @@
     return {
       enabled: els.enabled.checked,
       showInIframes: els.showInIframes.checked,
+      showOnNavigate: els.showOnNavigate.checked,
       minDisplayMs: parseInt(els.minDisplayMs.value, 10),
       safetyTimeoutMs: parseInt(els.safetyTimeoutMs.value, 10),
       slowLoadThresholdMs: parseInt(els.slowLoadThresholdMs.value, 10),
