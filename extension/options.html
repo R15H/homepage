@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading Tips — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Loading Tips Settings</h1>
+    <p class="subtitle">Configure your loading screen experience.</p>
+
+    <!-- Screens Section -->
+    <h2 class="section-title">Screens</h2>
+
+    <section class="setting">
+      <label>Active screens</label>
+      <p class="description">Enable one or more screens. When multiple are enabled, they rotate on each page load.</p>
+      <div id="screenGallery" class="screen-gallery"></div>
+      <div class="rotation-row">
+        <label for="rotationMode">Rotation mode</label>
+        <select id="rotationMode">
+          <option value="random">Random</option>
+          <option value="sequential">Sequential</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Per-screen config (dynamically rendered) -->
+    <div id="screenConfigContainer"></div>
+
+    <!-- General Settings -->
+    <h2 class="section-title">General</h2>
+
+    <section class="setting">
+      <div class="setting-header">
+        <label for="enabled">Enable extension</label>
+        <input type="checkbox" id="enabled" checked>
+      </div>
+      <p class="description">Master on/off switch. When disabled, no overlay is shown.</p>
+    </section>
+
+    <section class="setting">
+      <div class="setting-header">
+        <label for="showInIframes">Show in iframes</label>
+        <input type="checkbox" id="showInIframes">
+      </div>
+      <p class="description">Also display the overlay inside embedded frames.</p>
+    </section>
+
+    <section class="setting">
+      <div class="setting-header">
+        <label for="showOnNavigate">Show on navigation</label>
+        <input type="checkbox" id="showOnNavigate" checked>
+      </div>
+      <p class="description">Show the overlay immediately when navigating to a new page, covering the gap while the browser fetches the next page.</p>
+    </section>
+
+    <section class="setting">
+      <label for="minDisplayMs">Minimum display time</label>
+      <p class="description">The overlay stays visible for at least this long to prevent flashing.</p>
+      <div class="input-row">
+        <input type="range" id="minDisplayMs" min="0" max="3000" step="100" value="600">
+        <span id="minDisplayMsValue" class="range-value">600 ms</span>
+      </div>
+    </section>
+
+    <section class="setting">
+      <label for="safetyTimeoutMs">Safety timeout</label>
+      <p class="description">Force-remove the overlay after this many milliseconds, even if the page hasn't finished loading.</p>
+      <div class="input-row">
+        <input type="number" id="safetyTimeoutMs" min="1000" max="30000" step="500" value="8000">
+        <span class="unit">ms</span>
+      </div>
+    </section>
+
+    <section class="setting">
+      <label for="slowLoadThresholdMs">Slow load suggestion</label>
+      <p class="description">If a page takes longer than this to load, suggest disabling the extension on that domain. Set to 0 to disable.</p>
+      <div class="input-row">
+        <input type="range" id="slowLoadThresholdMs" min="0" max="15000" step="500" value="5000">
+        <span id="slowLoadThresholdMsValue" class="range-value">5000 ms</span>
+      </div>
+    </section>
+
+    <section class="setting">
+      <label for="bgColor">Overlay background color</label>
+      <p class="description">The background color of the loading overlay.</p>
+      <div class="color-row">
+        <input type="color" id="bgColor" value="#0d1117">
+        <div class="presets">
+          <button class="preset-swatch" data-color="#0d1117" title="Dark (default)"></button>
+          <button class="preset-swatch" data-color="#1a1a2e" title="Navy"></button>
+          <button class="preset-swatch" data-color="#ffffff" title="Light"></button>
+          <button class="preset-swatch" data-color="#161b22" title="GitHub Dark"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="setting">
+      <label>Excluded domains</label>
+      <p class="description">The overlay will not appear on these domains. Domains added via the slow-load suggestion also appear here.</p>
+      <div class="domain-add-row">
+        <input type="text" id="excludedDomainInput" placeholder="example.com">
+        <button id="addDomain" class="btn-secondary">Add</button>
+      </div>
+      <div id="excludedDomainList" class="domain-list"></div>
+      <p id="noDomains" class="domain-empty">No excluded domains yet.</p>
+    </section>
+
+    <div class="actions">
+      <button id="save" class="btn-primary">Save settings</button>
+      <button id="resetDefaults" class="btn-secondary">Reset to defaults</button>
+      <span id="status" class="status-msg"></span>
+    </div>
+  </div>
+
+  <script src="screens/registry.js"></script>
+  <script src="screens/quotes.js"></script>
+  <script src="screens/age-clock.js"></script>
+  <script src="screens/pomodoro.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

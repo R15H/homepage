@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Loading Tips",
+  "version": "2.0.0",
+  "description": "Customizable loading screens with quotes, clocks, timers, and more.",
+  "permissions": ["storage"],
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [
+        "screens/registry.js",
+        "screens/quotes.js",
+        "screens/age-clock.js",
+        "screens/pomodoro.js",
+        "content.js"
+      ],
+      "css": ["overlay.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
